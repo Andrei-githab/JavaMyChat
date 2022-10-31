@@ -4,13 +4,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        // File file = new File("log.txt");
-        // file.createNewFile();
+        File file = new File("log.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+            System.out.println("Был создан файл log.txt\n");
+        } else {
+            System.out.println("Файл log.txt готов к работе\n");
+        }
         FileWriter writer = new FileWriter("log.txt", true);
         Date datereg = new Date();
         Date dateinfo = new Date();
         Scanner scanreg = new Scanner(System.in);
         Scanner scanchat = new Scanner(System.in);
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Поля ввода login, email и password для user
         System.out.println("<><><><><><><><><><> Регистрация <><><><><><><><><><>\n");
@@ -43,7 +49,7 @@ public class Main {
 
         // Начало сеанса чата
         System.out.println("\n<><><><><><><><><><> Чат <><><><><><><><><><>\n");
-        String starseans = "\n\n[SESSION START: " + dateinfo + "]\r\n\n";
+        String starseans = "\n[SESSION START: " + dateinfo + "]\r\n\n";
         writer.write(starseans);
 
         System.out.print(user1.getLogin() + " > ");

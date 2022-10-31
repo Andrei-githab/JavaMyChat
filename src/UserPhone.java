@@ -6,7 +6,7 @@ public class UserPhone {
     private String numberphone;
     /**
      * Конструктор класса создает и приводит к стандартному виду номер телефона пользователя
-     * @param numberphone - не обработанный номер телефона пользователя
+     * @param numberphone не обработанный номер телефона пользователя
      */
     public UserPhone(String numberphone){
         setNumberPhone(numberphone);
@@ -20,6 +20,10 @@ public class UserPhone {
         normalizationUserPhone(numberphone);
     }
 
+    /**
+     * Метод преобразование номера телефона в нормальный вид
+     * @param numberphone - не обработанный номер телефона пользователя
+     */
     protected void normalizationUserPhone(String numberphone){
         String nphone;
         nphone = numberphone;

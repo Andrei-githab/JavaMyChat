@@ -1,5 +1,3 @@
-import java.util.regex.Pattern;
-
 /**
  * Класс пользователя (user) со свойствами login, email и password;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12
