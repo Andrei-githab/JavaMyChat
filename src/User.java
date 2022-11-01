@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.Date;
+import java.time.LocalDateTime;
 /**
  * Класс пользователя (user) со свойствами login, email и password;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12
@@ -43,7 +46,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-
         this.password = password;
     }
 
@@ -53,5 +55,20 @@ public class User {
 
     public void setPhoneUser(String phoneUser) {
         phoneNumber.setNumberPhone(phoneUser);
+    }
+
+    /**
+     * Метод осуществляет отправку сообщения и запись в файл log.txt
+     * @param mess сообщение от user
+     */
+    public void  sendMessageUser(String mess){
+        String smess = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
+        try {
+            FileWriter writeruser = new FileWriter("log.txt", true);
+            writeruser.write(smess);
+            writeruser.close();
+        } catch (IOException ex){
+            System.out.println("IOException: " + ex);
+        }
     }
 }
