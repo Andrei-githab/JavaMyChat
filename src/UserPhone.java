@@ -17,6 +17,14 @@ public class UserPhone {
     }
 
     public void setNumberPhone(String numberphone){
+        /*
+        try {
+            normalizationUserPhone(numberphone);
+        } catch (InvalidLenPhonEx e) {
+            throw new RuntimeException(e);
+        }
+
+         */
         normalizationUserPhone(numberphone);
     }
 
@@ -37,5 +45,6 @@ public class UserPhone {
         else {
             System.out.println("errr");
         }
+
     }
 }
