@@ -62,10 +62,23 @@ public class User {
      * @param mess сообщение от user
      */
     public void  sendMessageUser(String mess){
-        String smess = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
+        PGP pgp = new PGP();
+        String dmess;
+        String message = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
         try {
-            FileWriter writeruser = new FileWriter("log.txt", true);
-            writeruser.write(smess);
+            FileWriter swriteruser = new FileWriter("elog.txt", true);
+            FileWriter writeruser = new FileWriter("dlog.txt", true);
+            try {
+                message = pgp.encrypt(message);
+                dmess = pgp.decrypt(message);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            swriteruser.write(message);
+            swriteruser.write(message);
+            writeruser.write(dmess);
+            writeruser.write(dmess);
+            swriteruser.close();
             writeruser.close();
         } catch (IOException ex){
             System.out.println("IOException: " + ex);
