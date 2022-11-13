@@ -1,6 +1,6 @@
 /**
  * Класс номера телефона (user) со свойствами phonenamber;
- * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12
+ * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12, СПБГУТ
  */
 public class UserPhone {
     private String numberphone;
@@ -35,7 +35,7 @@ public class UserPhone {
             this.numberphone = nphone;
         }
         else {
-            System.out.println("errr");
+            System.out.println("NUMBER FORMAT ERROR");
         }
 
     }

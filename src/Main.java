@@ -5,17 +5,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         try {
-            File sfile = new File("elog.txt");
-            File file = new File("dlog.txt");
-            if (!file.exists()) {
-                file.createNewFile();
-                System.out.println("Был создан файл log.txt\n");
-            } else {
-                System.out.println("Файл log.txt готов к работе\n");
-            }
-            FileWriter swriter = new FileWriter("log.txt", true);
+            //File sfile = new File(".../JavaMyChat/resources/log/elog.txt");
+            //File file = new File("JavaMyChat/resources/log/dlog.txt");
             Date datereg = new Date();
-            Date dateinfo = new Date();
             Scanner scanreg = new Scanner(System.in);
             Scanner scanchat = new Scanner(System.in);
             String message = "";
@@ -34,17 +26,13 @@ public class Main {
              */
 
             // Создание нового объекта user1 и передача введенных данных и проверка что они вводились
-            User user1 = new User("Andru", "andru@email.com", "+7(981)9567", "qwerty");
+            User user1 = new User("Andru", "andru@email.com", 21,"+7(981)1323878", "qwerty");
             // User user1 = new User(userLogin, userEmail, userPhone, userPassword);
             System.out.println("\n[Login: " + user1.getLogin() + "  Email:  " + user1.getEmail() + "  Телефон: " +
                     user1.getPhoneUser() + "  Password: " + user1.getPassword() + "]  [Time: " + datereg + "]");
 
             // Начало сеанса чата
             System.out.println("\n<><><><><><><><><><> Чат <><><><><><><><><><>\n");
-            String starseans = "\n[SESSION START: " + dateinfo + "]\r\n\n";
-            swriter.write(starseans);
-            swriter.close();
-
             while (!(message.toLowerCase()).equals("logout")) {
                 System.out.print(user1.getLogin() + " > ");
                 message = scanchat.nextLine();

@@ -3,24 +3,27 @@ import java.util.Date;
 import java.time.LocalDateTime;
 /**
  * Класс пользователя (user) со свойствами login, email и password;
- * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12
+ * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12 , СПБГУТ
  */
 public class User {
     private UserPhone phoneNumber;
     private String login;
     private String email;
     private String password;
+    private int age;
 
     /**
      * Конструктор класса создает нового пользователя по параметрам:
      * @param loginUser - login (никнейм) пользователя
      * @param emailUser - email пользователя
+     * @param age - возраст пользователя
      * @param phoneUser - номер телефона пользователя
      * @param passwordUser - пароль пользователя
      */
-    public User(String loginUser, String emailUser, String phoneUser, String passwordUser){
+    public User(String loginUser, String emailUser, int age, String phoneUser, String passwordUser){
         this.login = loginUser;
         this.email = emailUser;
+        setAge(age);
         this.phoneNumber = new UserPhone(phoneUser);
         this.password = passwordUser;
     }
@@ -43,6 +46,19 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        if(age >= 14){
+            this.age = age;
+        }
+        else {
+            System.out.println("Недопустимый возраст!");
+        }
     }
 
     public void setPassword(String password) {
