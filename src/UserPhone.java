@@ -11,15 +11,12 @@ public class UserPhone {
     public UserPhone(String numberphone){
         setNumberPhone(numberphone);
     }
-
     public String getNumberPhone(){
         return numberphone;
     }
-
     public void setNumberPhone(String numberphone){
         normalizationUserPhone(numberphone);
     }
-
     /**
      * Метод преобразование номера телефона в нормальный вид
      * @param numberphone - не обработанный номер телефона пользователя
@@ -37,6 +34,5 @@ public class UserPhone {
         else {
             System.out.println("NUMBER FORMAT ERROR");
         }
-
     }
 }

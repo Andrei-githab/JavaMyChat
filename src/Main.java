@@ -1,12 +1,9 @@
 import java.io.*;
 import java.util.Date;
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) throws IOException {
         try {
-            //File sfile = new File(".../JavaMyChat/resources/log/elog.txt");
-            //File file = new File("JavaMyChat/resources/log/dlog.txt");
             Date datereg = new Date();
             Scanner scanreg = new Scanner(System.in);
             Scanner scanchat = new Scanner(System.in);
@@ -23,13 +20,14 @@ public class Main {
             String userPhone = scanreg.nextLine();
             System.out.print("Введите password >>> ");
             String userPassword = scanreg.nextLine();
-             */
+            */
 
             // Создание нового объекта user1 и передача введенных данных и проверка что они вводились
             User user1 = new User("Andru", "andru@email.com", 21,"+7(981)1323878", "qwerty");
             // User user1 = new User(userLogin, userEmail, userPhone, userPassword);
-            System.out.println("\n[Login: " + user1.getLogin() + "  Email:  " + user1.getEmail() + "  Телефон: " +
-                    user1.getPhoneUser() + "  Password: " + user1.getPassword() + "]  [Time: " + datereg + "]");
+            System.out.println("\n[Login: " + user1.getLogin() + "  Email:  " + user1.getEmail() + " Возраст: "
+                    + user1.getAge() + "  Телефон: " + user1.getPhoneUser() + "  Password: " + user1.getPassword()
+                    + "]  [Time: " + datereg + "]");
 
             // Начало сеанса чата
             System.out.println("\n<><><><><><><><><><> Чат <><><><><><><><><><>\n");
@@ -42,7 +40,7 @@ public class Main {
             }
         }
         catch (RuntimeException rex){
-            System.out.println("RuntimeException: " + rex);
+            System.out.println("An exception of type was thrown RuntimeException: " + rex);
         }
     }
 }

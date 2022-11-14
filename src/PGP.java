@@ -5,7 +5,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.util.Base64;
-
 /**
  * Класс шифрования PGP;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12, СПБГУТ
@@ -27,6 +26,10 @@ public class PGP {
         } catch (Exception ignored) {
         }
     }
+    /**
+     * Метод шифрования
+     * @param message - сообщение для шифровки
+     */
     public String encrypt(String message) throws Exception{
         byte[] messageToBytes = message.getBytes();
         // Создание шифра RSA c режимом шифрования ECB (Electronic Codebook (Режим электронной кодовой книги)) и схемой
@@ -41,11 +44,15 @@ public class PGP {
     private String encode(byte[] data){
         return Base64.getEncoder().encodeToString(data);
     }
+    /**
+     * Метод расшифрования
+     * @param encryptedMessage - сообщение для дешифровки
+     */
     public String decrypt(String encryptedMessage) throws Exception{
         byte[] encryptedBytes = decode(encryptedMessage);
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         // Инициализация шифра в режиме расшифровки
-        cipher.init(Cipher.DECRYPT_MODE,privateKey);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decryptedMessage = cipher.doFinal(encryptedBytes);
         return new String(decryptedMessage,"UTF8");
     }

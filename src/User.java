@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12 , СПБГУТ
  */
 public class User {
+
     private UserPhone phoneNumber;
     private String login;
     private String email;
@@ -16,14 +17,18 @@ public class User {
      * Конструктор класса создает нового пользователя по параметрам:
      * @param loginUser - login (никнейм) пользователя
      * @param emailUser - email пользователя
-     * @param age - возраст пользователя
+     * @param ageUser - возраст пользователя
      * @param phoneUser - номер телефона пользователя
      * @param passwordUser - пароль пользователя
      */
-    public User(String loginUser, String emailUser, int age, String phoneUser, String passwordUser){
+    public User(String loginUser, String emailUser, int ageUser, String phoneUser, String passwordUser) {
         this.login = loginUser;
         this.email = emailUser;
-        setAge(age);
+        try {
+            setAge(ageUser);
+        } catch (AgeException e) {
+            System.out.println(e);;
+        }
         this.phoneNumber = new UserPhone(phoneUser);
         this.password = passwordUser;
     }
@@ -52,13 +57,8 @@ public class User {
         return age;
     }
 
-    public void setAge(int age) {
-        if(age >= 14){
-            this.age = age;
-        }
-        else {
-            System.out.println("Недопустимый возраст!");
-        }
+    public void setAge(int age) throws AgeException{
+        if ((age < 0) | (age > 99)) throw new AgeException("INCORRECT AGE");
     }
 
     public void setPassword(String password) {
@@ -77,7 +77,7 @@ public class User {
      * Метод осуществляет отправку сообщения и запись в файл log.txt
      * @param mess сообщение от user
      */
-    public void  sendMessageUser(String mess){
+    public void  sendMessageUser(String mess) {
         PGP pgp = new PGP();
         String dmess;
         String message = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
@@ -96,8 +96,14 @@ public class User {
             writeruser.write(dmess);
             swriteruser.close();
             writeruser.close();
-        } catch (IOException ex){
-            System.out.println("IOException: " + ex);
+        } catch (IOException ex) {
+            System.out.println("An exception of type was thrown IOException: " + ex);
         }
+    }
+}
+
+class AgeException extends Exception{
+    public AgeException(String message){
+        super(message);
     }
 }
