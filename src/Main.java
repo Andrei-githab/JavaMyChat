@@ -13,7 +13,7 @@ public class Main {
             Scanner info = new Scanner(System.in);
             // Создание нового объекта user1 и передача введенных данных и проверка что они вводились
             System.out.println("Имя хоста: " + InetAddress.getLocalHost());
-            System.out.print("server y vas(yes/no)?" );
+            System.out.print("Сервер  локальный (yes/no)? : " );
             String yesno = scanip.nextLine();
             if (yesno.toLowerCase().equals("yes")) {
                 ipAddress = "localhost";
