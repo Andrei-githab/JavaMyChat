@@ -23,12 +23,9 @@ public class UserPhone {
      */
     protected void normalizationUserPhone(String numberphone){
         String nphone;
-        nphone = numberphone;
-        nphone = nphone.replaceAll("(\\D)*", "");
+        nphone = numberphone.replaceAll("(\\D)*", "");
         int len = nphone.length();
         if (len >= 10){
-            nphone = nphone.substring(len - 10);
-            nphone = "+7" + nphone;
             this.numberphone = nphone;
         }
         else {

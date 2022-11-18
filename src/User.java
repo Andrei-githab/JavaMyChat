@@ -78,6 +78,7 @@ public class User {
      * @param mess сообщение от user
      */
     public void  sendMessageUser(String mess) {
+        /*
         PGP pgp = new PGP();
         String dmess;
         String message = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
@@ -99,6 +100,7 @@ public class User {
         } catch (IOException ex) {
             System.out.println("An exception of type was thrown IOException: " + ex);
         }
+         */
     }
 }
 
