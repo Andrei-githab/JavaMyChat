@@ -1,8 +1,4 @@
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.util.Base64;
 /**
@@ -12,6 +8,11 @@ import java.util.Base64;
 public class PGP {
     private PrivateKey privateKey;
     private PublicKey publicKey;
+
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+
     public PGP() {
         try {
             // Метод getInstance() принимает имя алгоритма шифрования, который будет использоваться.
@@ -21,7 +22,9 @@ public class PGP {
             generator.initialize(1024);
             // Генерируем ключевую пару
             KeyPair pair = generator.generateKeyPair();
+            // Приватный ключ
             privateKey = pair.getPrivate();
+            // Публичный ключ
             publicKey = pair.getPublic();
         } catch (Exception ignored) {
         }
@@ -36,14 +39,12 @@ public class PGP {
         // дополнения PKCS5Padding
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         // Инициализация шифра в режиме шифрования
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
         // Шифрование блока данных
         byte[] encryptedBytes = cipher.doFinal(messageToBytes);
         return encode(encryptedBytes);
     }
-    private String encode(byte[] data){
-        return Base64.getEncoder().encodeToString(data);
-    }
+
     /**
      * Метод расшифрования
      * @param encryptedMessage - сообщение для дешифровки
@@ -52,11 +53,15 @@ public class PGP {
         byte[] encryptedBytes = decode(encryptedMessage);
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         // Инициализация шифра в режиме расшифровки
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        cipher.init(Cipher.DECRYPT_MODE, publicKey);
         byte[] decryptedMessage = cipher.doFinal(encryptedBytes);
         return new String(decryptedMessage,"UTF8");
     }
     private byte[] decode(String data){
         return Base64.getDecoder().decode(data);
+    }
+
+    private String encode(byte[] data){
+        return Base64.getEncoder().encodeToString(data);
     }
 }

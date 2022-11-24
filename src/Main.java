@@ -23,14 +23,12 @@ public class Main {
             } else {
                 System.out.println("Error");
             }
-            System.out.print("Введите login >>> ");
-            String userLogin = info.nextLine();
-            User user1 = new User(userLogin, "nullo", 21,"+7(981)1323878", "qwerty");
-            // User user1 = new User(userLogin, userEmail, userPhone, userPassword);
+
+            UserPost up1 = new UserPost();
+            User user1 = new User("userLogin", "nullo", 21,"+7(981)1323878", "qwerty");
             System.out.println("\n[Login: " + user1.getLogin() + "  Email:  " + user1.getEmail() + " Возраст: "
                     + user1.getAge() + "  Телефон: " + user1.getPhoneUser() + "  Password: " + user1.getPassword()
                     + "]  [Time: " + datereg + "]");
-            UserPost up1 = new UserPost(ipAddress, port);
             up1.sendMessageUser(ipAddress, port, user1.getLogin());
 
         }
