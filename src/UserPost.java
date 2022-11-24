@@ -11,17 +11,27 @@ import java.util.*;
 public class UserPost {
     PGP pgp = new PGP();
     private String kayusp;
+
+    // ip адрес клиента
     private String adressUser;
+
+    // порт соединения
     private int portUser;
+
+    // nickname user'a (имя клиента)
     private String nicknameUser;
+
+    //сокет для общения
     private Socket socket;
+
+    // поток чтения из сокета
     private BufferedReader in;
-    private BufferedReader inUser;
+
+    // поток записи в сокет
     private BufferedWriter out;
 
-    private Date time;
-    private String dtime;
-    private SimpleDateFormat dt1;
+    // поток чтения с консоли
+    private BufferedReader inUser;
 
     public UserPost() throws IOException {
     }
@@ -42,33 +52,40 @@ public class UserPost {
         this.portUser = portUser;
     }
 
-    private void pressNickname() {
-        System.out.print("Press your kay: ");
-        try {
-            kayusp = inUser.readLine();
-            out.write(kayusp + "\n");
-            out.flush();
-        } catch (IOException ignored) {
-        }
-
-    }
+    /**
+     * Метод обмена сообщениями
+     * @param adressUser адрес сервера
+     * @param portUser порт, такой же как у сервера
+     * @param nickname имя пользователя
+     */
     public void sendMessageUser(String adressUser, int portUser, String nickname) throws IOException{
         try {
+            // запрашиваем у сервера доступ на соединение
             this.socket = new Socket(adressUser, portUser);
+
+            // потоки чтения из сокета / записи в сокет, и чтения с консоли
             inUser = new BufferedReader(new InputStreamReader(System.in));
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.pressNickname(); // перед началом необходимо спросит имя
+
+            // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
-            new ReadMsg().start(); // нить читающая сообщения из сокета в бесконечном цикле
-            new WriteMsg().start(); // нить пишущая сообщения в сокет приходящие с консоли в бесконечном цикле
+
+            // нить читающая сообщения из сокета в бесконечном цикле
+            new ReadMsg().start();
+            // нить пишущая сообщения в сокет приходящие с консоли в бесконечном цикле
+            new WriteMsg().start();
 
         } catch (IOException ioex) {
+            // Обрывается соединение при возникновении ошибки сокета
             System.out.println("Socket failed");
             System.out.println("An exception of type was thrown IOException: " + ioex);
-
         }
     }
+
+    /**
+     * Метод закрытие сокета и потоков чтения из сокета / записи в сокет
+     */
     private void downService() {
         try {
             if (!socket.isClosed()) {
@@ -79,15 +96,19 @@ public class UserPost {
         } catch (IOException ignored) {}
     }
 
-    // нить чтения сообщений с сервера
+    /**
+     * Метод чтения сообщений с сервера
+     */
     private class ReadMsg extends Thread {
         @Override
         public void run() {
             String str;
             try {
                 while (true) {
-                    str = in.readLine(); // ждем сообщения с сервера
-                    System.out.println(str); // пишем сообщение с сервера на консоль
+                    // ждем сообщения с сервера
+                    str = in.readLine();
+                    // пишем сообщение с сервера на консоль
+                    System.out.println(str);
                 }
             } catch (IOException e) {
                 UserPost.this.downService();
@@ -97,6 +118,10 @@ public class UserPost {
     private static String encode(byte[] data) {
         return Base64.getEncoder().encodeToString(data);
     }
+
+    /**
+     * Метод отправки сообщений приходящих с консоли на сервер
+     */
     public class WriteMsg extends Thread {
         @Override
         public void run() {
@@ -105,11 +130,16 @@ public class UserPost {
             PGP pgp = new PGP();
             while (true) {
                 try {
+                    // сообщения с консоли
                     userWord = inUser.readLine();
+
+                    // выходим из цикла если пришло "chatout"
                     if (!(userWord.toLowerCase()).equals("chatout")) {
+                        // шифруем сообщение
                         dmess = pgp.encrypt(userWord);
+                        // отправляем на сервер
                         out.write(nicknameUser + ": " + dmess + " [" + new Date().toString() + "]\n");
-                        //out.write(nicknameUser + ": " + userWord + " [" + new Date().toString() + "]\n");
+                        // чистим
                         out.flush();
                         } else {
                         out.write(nicknameUser + " вышел из чата\n");
