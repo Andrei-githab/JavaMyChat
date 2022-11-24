@@ -1,7 +1,6 @@
 import java.io.*;
-import java.net.InetAddress;
-import java.util.Date;
-import java.util.Scanner;
+import java.net.*;
+import java.util.*;
 public class Main {
     // IPv4-адрес XXX.XXX.XXX.XXX
     public static String ipAddress;
