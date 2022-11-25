@@ -24,7 +24,7 @@ public class Main {
             }
 
             UserPost up1 = new UserPost();
-            User user1 = new User("userLogin", "nullo", 21,"+7(981)1323878", "qwerty");
+            User user1 = new User("userLogin", "andruvladimir0v@gmail.com", 21,"+7(981)1323878", "qwerty");
             System.out.println("\n[Login: " + user1.getLogin() + "  Email:  " + user1.getEmail() + " Возраст: "
                     + user1.getAge() + "  Телефон: " + user1.getPhoneUser() + "  Password: " + user1.getPassword()
                     + "]  [Time: " + new Date().toString() + "]");

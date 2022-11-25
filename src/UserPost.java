@@ -68,6 +68,14 @@ public class UserPost {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
+            // создам поток для сериализации публичного ключа
+            // (Сериализация — это процесс записи объекта в выходной поток)
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            // записывает в поток публичный ключ (PublicKey)
+            objectOutputStream.writeObject(pgp.getPublicKey());
+            // очищает буфер и сбрасываем его содержимое в выходной поток (на сервер)
+            objectOutputStream.flush();
+
             // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
 
@@ -112,6 +120,8 @@ public class UserPost {
                 }
             } catch (IOException e) {
                 UserPost.this.downService();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -127,7 +137,6 @@ public class UserPost {
         public void run() {
             String userWord;
             String dmess;
-            PGP pgp = new PGP();
             while (true) {
                 try {
                     // сообщения с консоли
@@ -136,18 +145,17 @@ public class UserPost {
                     // выходим из цикла если пришло "chatout"
                     if (!(userWord.toLowerCase()).equals("chatout")) {
                         // шифруем сообщение
+                        userWord = nicknameUser + ": " + userWord + " [" + new Date().toString() + "]\n";
                         dmess = pgp.encrypt(userWord);
                         // отправляем на сервер
-                        out.write(nicknameUser + ": " + dmess + " [" + new Date().toString() + "]\n");
+                        out.write(dmess + "\n");
                         // чистим
                         out.flush();
                         } else {
                         out.write(nicknameUser + " вышел из чата\n");
                         UserPost.this.downService();
                         break;
-
                     }
-
                 } catch (IOException e) {
                     UserPost.this.downService();
                 } catch (Exception e) {
