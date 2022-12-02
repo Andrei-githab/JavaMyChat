@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
  * Класс пользователя (user) со свойствами login, email и password;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12 , СПБГУТ
  */
+
 public class User {
 
     private UserPhone phoneNumber;
@@ -73,35 +74,6 @@ public class User {
         phoneNumber.setNumberPhone(phoneUser);
     }
 
-    /**
-     * Метод осуществляет отправку сообщения и запись в файл log.txt
-     * @param mess сообщение от user
-     */
-    public void  sendMessageUser(String mess) {
-        /*
-        PGP pgp = new PGP();
-        String dmess;
-        String message = this.getLogin() + " " + mess + " [" + new Date().toString() + "]" + "\r\n";
-        try {
-            FileWriter swriteruser = new FileWriter("elog.txt", true);
-            FileWriter writeruser = new FileWriter("dlog.txt", true);
-            try {
-                message = pgp.encrypt(message);
-                dmess = pgp.decrypt(message);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            swriteruser.write(message);
-            swriteruser.write(message);
-            writeruser.write(dmess);
-            writeruser.write(dmess);
-            swriteruser.close();
-            writeruser.close();
-        } catch (IOException ex) {
-            System.out.println("An exception of type was thrown IOException: " + ex);
-        }
-         */
-    }
 }
 
 class AgeException extends Exception{

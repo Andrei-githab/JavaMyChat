@@ -18,8 +18,9 @@ public class PGP {
             // Метод getInstance() принимает имя алгоритма шифрования, который будет использоваться.
             // В данном случае мы используем алгоритм RSA.
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            // Инициализируем ключ размером 2048 бит
-            generator.initialize(2048);
+            // Инициализируем ключ размером 4096 бит максимальный объем
+            // данных, который можно зашифровать таким ключом, равен 512
+            generator.initialize(4096);
             // Генерируем ключевую пару
             KeyPair pair = generator.generateKeyPair();
             // Приватный ключ

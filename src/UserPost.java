@@ -151,7 +151,7 @@ public class UserPost {
                         out.write(dmess + "\n");
                         // чистим
                         out.flush();
-                        } else {
+                    } else {
                         out.write(nicknameUser + " вышел из чата\n");
                         UserPost.this.downService();
                         break;

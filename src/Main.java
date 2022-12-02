@@ -5,7 +5,7 @@ public class Main {
     // IPv4-адрес XXX.XXX.XXX.XXX
     public static String ipAddress;
     // PORT
-    public static int PORT = 6500;
+    public static int PORT = 9999;
     public static void main(String[] args) throws IOException {
         try {
             PGP pgp = new PGP();
