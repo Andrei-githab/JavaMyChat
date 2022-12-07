@@ -1,6 +1,8 @@
 /// out.write(encode(pgp.getPublicKey().getEncoded()));
 import java.net.*;
 import java.io.*;
+import java.rmi.RemoteException;
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,7 +34,7 @@ public class UserPost {
 
     // поток чтения с консоли
     private BufferedReader inUser;
-
+    private PublicKey spub;
     public UserPost() throws IOException {
     }
 
@@ -76,6 +78,10 @@ public class UserPost {
             // очищает буфер и сбрасываем его содержимое в выходной поток (на сервер)
             objectOutputStream.flush();
 
+            // считываем из потока объект (получаем ключ от сервера)
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            spub = (PublicKey)objectInputStream.readObject();
+
             // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
 
@@ -88,6 +94,9 @@ public class UserPost {
             // Обрывается соединение при возникновении ошибки сокета
             System.out.println("Socket failed");
             System.out.println("An exception of type was thrown IOException: " + ioex);
+
+        } catch (Exception e){
+            System.out.println("An exception of type was thrown Exception: " + e);
         }
     }
 
@@ -110,13 +119,16 @@ public class UserPost {
     private class ReadMsg extends Thread {
         @Override
         public void run() {
-            String str;
+            String str, dstr;
             try {
                 while (true) {
                     // ждем сообщения с сервера
                     str = in.readLine();
+                    // System.out.println("ot servera: " + str); // для отладки
+                    // Расшифровка сообщение от сервера
+                    dstr = pgp.decrypt(str);
                     // пишем сообщение с сервера на консоль
-                    System.out.println(str);
+                    System.out.println(dstr);
                 }
             } catch (IOException e) {
                 UserPost.this.downService();
@@ -125,9 +137,6 @@ public class UserPost {
             }
         }
     }
-    private static String encode(byte[] data) {
-        return Base64.getEncoder().encodeToString(data);
-    }
 
     /**
      * Метод отправки сообщений приходящих с консоли на сервер
@@ -135,20 +144,18 @@ public class UserPost {
     public class WriteMsg extends Thread {
         @Override
         public void run() {
-            String userWord;
-            String dmess;
+            String userWord, sUserWord;
             while (true) {
                 try {
                     // сообщения с консоли
                     userWord = inUser.readLine();
-
                     // выходим из цикла если пришло "chatout"
                     if (!(userWord.toLowerCase()).equals("chatout")) {
                         // шифруем сообщение
-                        userWord = nicknameUser + ": " + userWord + " [" + new Date().toString() + "]\n";
-                        dmess = pgp.encrypt(userWord);
+                        userWord = nicknameUser + "| " + userWord + " |" + new Date().toString();
+                        sUserWord = pgp.encrypt(userWord, spub);
                         // отправляем на сервер
-                        out.write(dmess + "\n");
+                        out.write(sUserWord + "\n");
                         // чистим
                         out.flush();
                     } else {

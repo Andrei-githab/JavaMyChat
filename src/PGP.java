@@ -34,13 +34,13 @@ public class PGP {
      * Метод шифрования
      * @param message - сообщение для шифровки
      */
-    public String encrypt(String message) throws Exception{
+    public String encrypt(String message, PublicKey spkay) throws Exception{
         byte[] messageToBytes = message.getBytes();
         // Создание шифра RSA c режимом шифрования ECB (Electronic Codebook (Режим электронной кодовой книги)) и схемой
         // дополнения PKCS5Padding
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         // Инициализация шифра в режиме шифрования
-        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        cipher.init(Cipher.ENCRYPT_MODE, spkay);
         // Шифрование блока данных
         byte[] encryptedBytes = cipher.doFinal(messageToBytes);
         return encode(encryptedBytes);
@@ -54,7 +54,7 @@ public class PGP {
         byte[] encryptedBytes = decode(encryptedMessage);
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         // Инициализация шифра в режиме расшифровки
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decryptedMessage = cipher.doFinal(encryptedBytes);
         return new String(decryptedMessage,"UTF8");
     }
