@@ -1,10 +1,8 @@
-/// out.write(encode(pgp.getPublicKey().getEncoded()));
-import java.net.*;
 import java.io.*;
-import java.rmi.RemoteException;
+import java.net.Socket;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
 /**
  * Класс (UserPost) ;
@@ -35,6 +33,7 @@ public class UserPost {
     // поток чтения с консоли
     private BufferedReader inUser;
     private PublicKey spub;
+
     public UserPost() throws IOException {
     }
 
@@ -56,11 +55,12 @@ public class UserPost {
 
     /**
      * Метод обмена сообщениями
+     *
      * @param adressUser адрес сервера
-     * @param portUser порт, такой же как у сервера
-     * @param nickname имя пользователя
+     * @param portUser   порт, такой же как у сервера
+     * @param nickname   имя пользователя
      */
-    public void sendMessageUser(String adressUser, int portUser, String nickname) throws IOException{
+    public void sendMessageUser(String adressUser, int portUser, String nickname) throws IOException {
         try {
             // запрашиваем у сервера доступ на соединение
             this.socket = new Socket(adressUser, portUser);
@@ -71,7 +71,6 @@ public class UserPost {
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             // создам поток для сериализации публичного ключа
-            // (Сериализация — это процесс записи объекта в выходной поток)
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             // записывает в поток публичный ключ (PublicKey)
             objectOutputStream.writeObject(pgp.getPublicKey());
@@ -80,11 +79,12 @@ public class UserPost {
 
             // считываем из потока объект (получаем ключ от сервера)
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            spub = (PublicKey)objectInputStream.readObject();
-
+            spub = (PublicKey) objectInputStream.readObject();
+            // System.out.println("Ключ сервера: " + spub);
             // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
 
+            System.out.println("Привет " + nicknameUser + "!");
             // нить читающая сообщения из сокета в бесконечном цикле
             new ReadMsg().start();
             // нить пишущая сообщения в сокет приходящие с консоли в бесконечном цикле
@@ -95,7 +95,7 @@ public class UserPost {
             System.out.println("Socket failed");
             System.out.println("An exception of type was thrown IOException: " + ioex);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An exception of type was thrown Exception: " + e);
         }
     }
@@ -110,7 +110,8 @@ public class UserPost {
                 in.close();
                 out.close();
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     /**
@@ -119,18 +120,20 @@ public class UserPost {
     private class ReadMsg extends Thread {
         @Override
         public void run() {
-            String str, dstr;
+            String message;
             try {
                 while (true) {
-                    // ждем сообщения с сервера
-                    str = in.readLine();
-                    // System.out.println("ot servera: " + str); // для отладки
-                    // Расшифровка сообщение от сервера
-                    dstr = pgp.decrypt(str);
+                    message = in.readLine(); // ждем сообщения с сервера
+                    message = pgp.decrypt(message);
+                    if (message.equals("chat_stop")) {
+                        UserPost.this.downService();
+                        break; // выходим из цикла если пришло "stop"
+                    }
                     // пишем сообщение с сервера на консоль
-                    System.out.println(dstr);
+                    System.out.println(message);
                 }
             } catch (IOException e) {
+                System.out.println("ReadMsg ioexception: " + e);
                 UserPost.this.downService();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -144,29 +147,30 @@ public class UserPost {
     public class WriteMsg extends Thread {
         @Override
         public void run() {
-            String userWord, sUserWord;
             while (true) {
+                String messUser, sMessUser;
                 try {
-                    // сообщения с консоли
-                    userWord = inUser.readLine();
-                    // выходим из цикла если пришло "chatout"
-                    if (!(userWord.toLowerCase()).equals("chatout")) {
-                        // шифруем сообщение
-                        userWord = nicknameUser + "| " + userWord + " |" + new Date().toString();
-                        sUserWord = pgp.encrypt(userWord, spub);
-                        // отправляем на сервер
-                        out.write(sUserWord + "\n");
-                        // чистим
-                        out.flush();
-                    } else {
-                        out.write(nicknameUser + " вышел из чата\n");
+                    // ждем сообщения пользователя с консоли
+                    messUser = inUser.readLine();
+
+                    if (messUser.equalsIgnoreCase("chat_stop")) {
+                        // выходим из цикла если пришло "chat_stop" т.е. выходим из чата
                         UserPost.this.downService();
                         break;
+                    } else {
+                        // формируем строку дата + nickname + сообщение
+                        sMessUser = new Date() + "|" + nicknameUser + "|" + messUser;
+                        // шифруем строку
+                        sMessUser = pgp.encrypt(sMessUser, spub);
+                        // отправляем на сервер
+                        out.write(sMessUser + "\n");
+                        out.flush();
                     }
+
                 } catch (IOException e) {
                     UserPost.this.downService();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.out.println(e);
                 }
             }
         }
