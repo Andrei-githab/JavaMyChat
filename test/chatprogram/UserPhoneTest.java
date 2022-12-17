@@ -7,8 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserPhoneTest {
     @Test
     void setNumberPhone() {
-        UserPhone userPhone = new UserPhone("+7 (981) 132-38-78");
+        String numberphone = "+7 (981) 132-38-78";
+        System.out.println(numberphone);
+        UserPhone userPhone = new UserPhone(numberphone);
         String test = userPhone.getNumberPhone();
         assertEquals("79811323878", test);
+        System.out.println(test);
     }
 }

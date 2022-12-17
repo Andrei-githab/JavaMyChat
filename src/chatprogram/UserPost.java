@@ -147,7 +147,7 @@ public class UserPost implements IUserPost{
                         date_long = new Date(); // текущая дата
                         date = new SimpleDateFormat("HH:mm:ss"); // берем только время до секунд
                         // формируем строку дата + nickname + сообщение
-                        sMessUser = date.format(date_long) + "|" + nicknameUser + "|" + messUser;
+                        sMessUser =  nicknameUser + "|" + date.format(date_long) + "|" + messUser;
                         // шифруем строку
                         sMessUser = pgp.encrypt(sMessUser, publicKeyServer);
                         // отправляем на сервер
