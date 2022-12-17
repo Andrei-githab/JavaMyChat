@@ -1,6 +1,7 @@
+package chatprogram;
 /**
  * Класс номера телефона (user) со свойствами phonenamber;
- * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12, СПБГУТ
+ * @author Владимиров Андрей ИБС - 12, СПБГУТ
  */
 public class UserPhone {
     private String numberphone;

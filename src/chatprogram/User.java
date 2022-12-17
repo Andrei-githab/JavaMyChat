@@ -1,3 +1,4 @@
+package chatprogram;
 import java.io.*;
 import java.util.Date;
 import java.time.LocalDateTime;
@@ -7,7 +8,6 @@ import java.time.LocalDateTime;
  */
 
 public class User {
-
     private UserPhone phoneNumber;
     private String login;
     private String email;

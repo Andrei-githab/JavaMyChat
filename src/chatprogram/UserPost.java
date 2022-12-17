@@ -1,3 +1,4 @@
+package chatprogram;
 import java.io.*;
 import java.net.Socket;
 import java.security.PublicKey;
@@ -8,34 +9,18 @@ import java.util.Date;
  * Класс (UserPost) ;
  * @author Владимиров Андрей ИБС - 12, Владимир Яровой ИБС - 12 , СПБГУТ
  */
-public class UserPost {
+public class UserPost implements IUserPost{
     PGP pgp = new PGP();
-    private String kayusp;
-
-    // ip адрес клиента
     private String adressUser;
-
-    // порт соединения
     private int portUser;
-
-    // nickname user'a (имя клиента)
     private String nicknameUser;
-
-    //сокет для общения
     private Socket socket;
-
-    // поток чтения из сокета
     private BufferedReader in;
-
-    // поток записи в сокет
     private BufferedWriter out;
-
-    // поток чтения с консоли
     private BufferedReader inUser;
-    private PublicKey spub;
-
-    public UserPost() throws IOException {
-    }
+    private PublicKey publicKeyServer;
+    private Date date_long;
+    private SimpleDateFormat date;
 
     public String getAdressUser() {
         return adressUser;
@@ -79,7 +64,7 @@ public class UserPost {
 
             // считываем из потока объект (получаем ключ от сервера)
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            spub = (PublicKey) objectInputStream.readObject();
+            publicKeyServer = (PublicKey) objectInputStream.readObject();
             // System.out.println("Ключ сервера: " + spub);
             // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
@@ -93,10 +78,10 @@ public class UserPost {
         } catch (IOException ioex) {
             // Обрывается соединение при возникновении ошибки сокета
             System.out.println("Socket failed");
-            System.out.println("An exception of type was thrown IOException: " + ioex);
+            System.out.println("An exception of type IOException was thrown by the sendMessageUser method: " + ioex);
 
         } catch (Exception e) {
-            System.out.println("An exception of type was thrown Exception: " + e);
+            System.out.println("An exception of type Exception was thrown by the sendMessageUser method: " + e);
         }
     }
 
@@ -123,17 +108,19 @@ public class UserPost {
             String message;
             try {
                 while (true) {
-                    message = in.readLine(); // ждем сообщения с сервера
+                    // ждем сообщения с сервера
+                    message = in.readLine();
+                    // дишифруем сообщение от сервера
                     message = pgp.decrypt(message);
                     if (message.equals("chat_stop")) {
                         UserPost.this.downService();
-                        break; // выходим из цикла если пришло "stop"
+                        break; // выходим из цикла если пришло "chat_stop"
                     }
                     // пишем сообщение с сервера на консоль
                     System.out.println(message);
                 }
-            } catch (IOException e) {
-                System.out.println("ReadMsg ioexception: " + e);
+            } catch (IOException ioException) {
+                System.out.println("An exception of type IOException was thrown by the ReadMsg method: " + ioException);
                 UserPost.this.downService();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -152,22 +139,24 @@ public class UserPost {
                 try {
                     // ждем сообщения пользователя с консоли
                     messUser = inUser.readLine();
-
                     if (messUser.equalsIgnoreCase("chat_stop")) {
                         // выходим из цикла если пришло "chat_stop" т.е. выходим из чата
                         UserPost.this.downService();
                         break;
                     } else {
+                        date_long = new Date(); // текущая дата
+                        date = new SimpleDateFormat("HH:mm:ss"); // берем только время до секунд
                         // формируем строку дата + nickname + сообщение
-                        sMessUser = new Date() + "|" + nicknameUser + "|" + messUser;
+                        sMessUser = date.format(date_long) + "|" + nicknameUser + "|" + messUser;
                         // шифруем строку
-                        sMessUser = pgp.encrypt(sMessUser, spub);
+                        sMessUser = pgp.encrypt(sMessUser, publicKeyServer);
                         // отправляем на сервер
                         out.write(sMessUser + "\n");
                         out.flush();
                     }
 
-                } catch (IOException e) {
+                } catch (IOException ioException) {
+                    System.out.println("An exception of type IOException was thrown by the WriteMsg method: " + ioException);
                     UserPost.this.downService();
                 } catch (Exception e) {
                     System.out.println(e);

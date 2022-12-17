@@ -1,3 +1,4 @@
+package chatprogram;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -15,7 +16,7 @@ public class Main {
             String ipAddress = scanip.nextLine();
 
             UserPost up1 = new UserPost();
-            User user1 = new User("AndruVladiv", "andruvladimir0v@gmail.com", 21,"+7(981)1323878", "qwerty");
+            User user1 = new User("Andru", "andruvladimir0v@gmail.com", 21,"+7(981)1323878", "qwerty");
             up1.sendMessageUser(ipAddress, PORT, user1.getLogin());
 
         }

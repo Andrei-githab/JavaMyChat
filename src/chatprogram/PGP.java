@@ -1,10 +1,12 @@
-import javax.crypto.BadPaddingException;
+package chatprogram;
+
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.UnsupportedEncodingException;
-import java.security.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Base64;
+
 /**
  * Класс шифрования PGP;
  * @author Владимиров Андрей ИБС - 12, СПБГУТ
@@ -12,7 +14,6 @@ import java.util.Base64;
 public class PGP {
     private PrivateKey privateKey;
     private PublicKey publicKey;
-
     public PublicKey getPublicKey() {
         return publicKey;
     }
