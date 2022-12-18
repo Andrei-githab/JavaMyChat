@@ -27,7 +27,7 @@ public class UserPhone {
         nphone = numberphone.replaceAll("(\\D)*", "");
         int len = nphone.length();
         if (len >= 10){
-            this.numberphone = nphone;
+            this.numberphone = "+" + nphone;
         }
         else {
             System.out.println("NUMBER FORMAT ERROR");

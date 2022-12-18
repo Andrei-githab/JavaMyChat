@@ -68,8 +68,6 @@ public class UserPost implements IUserPost{
             // System.out.println("Ключ сервера: " + spub);
             // получаем (nickname) и присваиваем имя пользователя (nicknameUser)
             nicknameUser = nickname;
-
-            System.out.println("Привет " + nicknameUser + "!");
             // нить читающая сообщения из сокета в бесконечном цикле
             new ReadMsg().start();
             // нить пишущая сообщения в сокет приходящие с консоли в бесконечном цикле

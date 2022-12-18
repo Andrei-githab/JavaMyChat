@@ -11,7 +11,7 @@ class UserPhoneTest {
         System.out.println(numberphone);
         UserPhone userPhone = new UserPhone(numberphone);
         String test = userPhone.getNumberPhone();
-        assertEquals("79811323878", test);
+        assertEquals("+79811323878", test);
         System.out.println(test);
     }
 }
