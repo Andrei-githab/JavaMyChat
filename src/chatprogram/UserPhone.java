@@ -4,7 +4,7 @@ package chatprogram;
  * @author Владимиров Андрей ИБС - 12, СПБГУТ
  */
 public class UserPhone {
-    private String numberphone;
+    private String numberphone, obrnumberphone;
     /**
      * Конструктор класса создает и приводит к стандартному виду номер телефона пользователя
      * @param numberphone не обработанный номер телефона пользователя
@@ -13,7 +13,7 @@ public class UserPhone {
         setNumberPhone(numberphone);
     }
     public String getNumberPhone(){
-        return numberphone;
+        return obrnumberphone;
     }
     public void setNumberPhone(String numberphone){
         normalizationUserPhone(numberphone);
@@ -27,7 +27,7 @@ public class UserPhone {
         nphone = numberphone.replaceAll("(\\D)*", "");
         int len = nphone.length();
         if (len >= 10){
-            this.numberphone = "+" + nphone;
+            obrnumberphone = "+" + nphone;
         }
         else {
             System.out.println("NUMBER FORMAT ERROR");

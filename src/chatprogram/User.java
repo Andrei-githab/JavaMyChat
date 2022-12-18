@@ -59,7 +59,11 @@ public class User {
     }
 
     public void setAge(int age) throws AgeException{
-        if ((age < 0) | (age > 99)) throw new AgeException("INCORRECT AGE");
+        if ((18 < age) | (age < 99)) {
+            this.age = age;
+        } else {
+            throw new AgeException("INCORRECT AGE");
+        }
     }
 
     public void setPassword(String password) {

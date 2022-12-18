@@ -31,7 +31,7 @@ public class Main {
                     System.out.print("Введите password >>> ");
                     String userPasswordAuth = scanreg.nextLine();
                     userAuthDB.authorization(userEmailAuth, userPasswordAuth);
-                    userPostAuth.sendMessageUser(ipAddress, PORT, ">>");
+                    userPostAuth.sendMessageUser(ipAddress, PORT, ">");
                     break;
                 case "no":
                     // Создание нового объекта userRegistration для последующей регистрации

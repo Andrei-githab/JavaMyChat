@@ -1,6 +1,5 @@
 package chatprogram;
 
-import java.io.IOException;
 import java.sql.*;
 
 public class UserRegAuthDB {
@@ -8,6 +7,7 @@ public class UserRegAuthDB {
     private static final String DB_PASS = "root";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/chatdb";
     private Connection connectionDB;
+    String rs = "";
     public void registration(String loginUserReg, String emailUserReg, int ageUserReg, String phoneUserReg, String passwordUserReg){
         try {
             this.connectionDB = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASS);
@@ -19,7 +19,7 @@ public class UserRegAuthDB {
             preparedStatementAdd.setString(4, phoneUserReg);
             preparedStatementAdd.setString(5, passwordUserReg);
             preparedStatementAdd.executeUpdate();
-            System.out.println(loginUserReg + "вы зарегистрированы!");
+            System.out.println(loginUserReg + " вы зарегистрированы!");
         } catch (SQLException sqlException) {
             System.out.println("БД SQL Exception: " + sqlException);
         }
@@ -32,12 +32,12 @@ public class UserRegAuthDB {
             PreparedStatement preparedStatementAuth = connectionDB.prepareStatement(sqlAuth);
             preparedStatementAuth.setString(1, emailUserAuth);
             preparedStatementAuth.setString(2, passwordUserAuth);
-            ResultSet resultSet = preparedStatementAuth.getResultSet();
-            if (resultSet!= null){
-                System.out.println(resultSet);
-            } // else {
-                //System.out.println("Вы не зарегистрированы!!!");
-            //}
+            ResultSet resultSet = preparedStatementAuth.executeQuery();
+            if (resultSet.next()){
+                System.out.println("Welcome " + emailUserAuth + "!");
+            } else {
+                System.out.println("((((");
+            }
         } catch (SQLException sqlException) {
             System.out.println("БД SQL Exception: " + sqlException);
         }
