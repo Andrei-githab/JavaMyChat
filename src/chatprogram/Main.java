@@ -5,38 +5,31 @@ import java.util.*;
 public class Main {
     // IPv4-адрес XXX.XXX.XXX.XXX
     public static String ipAddress;
-    // PORT
-    public static int PORT = 9999;
     public static void main(String[] args) throws Exception {
         try {
             Scanner scanreg = new Scanner(System.in);
             Scanner scanip = new Scanner(System.in);
             Scanner yesno = new Scanner (System.in);
             String decision;
-            boolean yn;
-            // Создание нового объекта user1 и передача введенных данных и проверка что они вводились
+
             System.out.println("Имя хоста: " + InetAddress.getLocalHost());
             System.out.print("Адрес сервера: " );
             String ipAddress = scanip.nextLine();
-
             System.out.print("Вы зарегистрированы [yes or no]: > ");
             decision = yesno.nextLine();
             switch(decision){
                 case "yes":
                     UserRegAuthDB userAuthDB = new UserRegAuthDB();
-                    UserPost userPostAuth = new UserPost();
                     System.out.println("<><><><><><><><><><> Авторизация <><><><><><><><><><>\n");
                     System.out.print("Введите Email >>> ");
                     String userEmailAuth = scanreg.nextLine();
                     System.out.print("Введите password >>> ");
                     String userPasswordAuth = scanreg.nextLine();
-                    userAuthDB.authorization(userEmailAuth, userPasswordAuth);
-                    userPostAuth.sendMessageUser(ipAddress, PORT, ">");
+                    userAuthDB.authorization(userEmailAuth, userPasswordAuth, ipAddress);
                     break;
                 case "no":
                     // Создание нового объекта userRegistration для последующей регистрации
                     UserRegAuthDB userRegDB = new UserRegAuthDB();
-                    UserPost userPostReg = new UserPost();
                     System.out.println("<><><><><><><><><><> Регистрация <><><><><><><><><><>\n");
                     System.out.print("Введите login >>> ");
                     String userLogin = scanreg.nextLine();
@@ -51,9 +44,8 @@ public class Main {
                     // Создание нового объекта userReg
                     User userReg = new User(userLogin, userEmail, userAge, userPhone, userPassword);
                     // регистрация пользователя
-                    userRegDB.registration(userReg.getLogin(), userReg.getEmail(), userReg.getAge(), userReg.getPhoneUser(), userReg.getPassword());
+                    userRegDB.registration(userReg.getLogin(), userReg.getEmail(), userReg.getAge(), userReg.getPhoneUser(), userReg.getPassword(), ipAddress);
                     // запуск чата после регистрации
-                    userPostReg.sendMessageUser(ipAddress, PORT, userReg.getLogin());
                     break;
                 default :
                     System.out.println("please enter again ");
